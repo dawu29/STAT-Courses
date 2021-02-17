@@ -1,0 +1,60 @@
+---
+title: "Lab03"
+author: "Dawu Liu"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r}
+library(RSQLite)
+library(DBI)
+dbcon = dbConnect(SQLite(), dbname="C:/Users/John/Desktop/STAT 240/Data/lab03.sqlite")
+```
+Question 1a \
+There are 21 distinct years.
+
+Question 1b \
+The code used to calculate the value is shown below
+```{r}
+names(dbReadTable(dbcon,"WinterO"))
+qry = "SELECT DISTINCT year FROM WinterO"
+#check row number of such entries, row number = number of distinct years
+nrow(dbGetQuery(dbcon, qry))
+dbGetQuery(dbcon, qry)
+```
+\newpage
+Question 2a \
+
+```{r}
+qry = "SELECT DISTINCT Height_m FROM Pokem ORDER BY Height_m DESC"
+dbGetQuery(dbcon, qry)
+```
+There are 50 distinct heights
+
+\newpage
+Question 3a \
+Histogram 
+```{r}
+qry = "SELECT cp FROM Vanpoke"
+p=dbGetQuery(dbcon, qry)
+hist(p$cp, main="Histogram of pokemon in Pokemon Go in Vancouver",
+     xlab="Combat Power Level", ylab = "Number of Pokemon")
+```
+
+Question 3b\
+Kernel Density Plot
+```{r}
+plot(density(p$cp), main = "Kernal Density Plot of Pokemon Combat Power Level ",
+     xlab = "Combat Power Level", ylab = "Density / Probability")
+```
+
+
+
+
+
+
+
+
+
+
