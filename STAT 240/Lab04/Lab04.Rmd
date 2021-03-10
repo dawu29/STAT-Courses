@@ -1,0 +1,121 @@
+---
+title: "Lab04"
+output: pdf_document
+---
+
+Question 1a
+```{r}
+
+#returns bin height
+counts = function(x, n) {
+  binEdge = seq(min(x), max(x), by = (max(x)-min(x))/n) 
+  v <- vector(mode="numeric", length = n)
+  for ( i in 1:n) {
+    v[i] = sum(x >= binEdge[i] & x < binEdge[i+1] )
+  }
+  #for the last interval, upper limit is closed
+  v[n] = sum(x == max(x))
+  return (v)
+}
+```
+\
+Question 1b
+```{r}
+histo = function (x, n) {
+  count = counts(x, n)
+  binEdge = seq(min(x), max(x), by = (max(x)-min(x))/n) 
+  #X, Y are the paired coordinates for lines function to traverse
+  #each bin needs 3 points for lines function to traverse, plus the initial point
+  X = vector(mode = "numeric", length = 3*n + 1 )
+  Y = vector(mode = "numeric", length = 3*n + 1 )
+  plot (1, type="n", xlab="x", ylab="Counts",
+        xlim=c(min(binEdge),max(binEdge)),ylim=c(0, max(count)),
+        main = "Histogram of x"
+  )
+  #initial points
+  X[1] = (binEdge[1]); Y[1]=0
+  # set up the coordinates for lines function to connect
+  for (i in 1: n) {
+    X[3*i-1] = binEdge[i] 
+    Y[3*i-1] = count[i]
+    
+    X[3*i]   = binEdge[i+1] 
+    Y[3*i]   = count[i]
+    
+    X[3*i+1] = binEdge[i+1]
+    Y[3*i+1] = 0
+  }
+  # connects the coordinates
+  lines(X,Y)
+  # line y = 0
+  lines(c(min(x),max(x)) , c(0,0))
+}
+```
+\
+Question 1c
+```{r}
+set.seed(100)  
+num = c(rnorm(100, -1,1), rnorm(100, 1,1))
+histo(num, 10)
+```
+\
+Question 1d
+```{r}
+x = c(0,0,0,1,1,2)
+histo(x,3)
+```
+
+\newpage
+Question 2a
+```{r}
+library(rworldmap)
+library(rworldxtra)
+library(MASS)
+library(sp)
+library(RSQLite)
+library(DBI)
+worldmap = getMap(resolution = "high")
+NrthAm = worldmap[which(worldmap$REGION =="North America"),]
+plot(NrthAm, xlim=c(-123.35,-122.65),
+     ylim=c(49,49.35), main = "Pokemon in Vancouver")
+con = dbConnect(SQLite(), dbname="C:/Users/John/Desktop/STAT 240/Data/lab03.sqlite")
+qry = "SELECT latitude, longitude FROM Vanpoke"
+p = dbGetQuery(con,qry)
+points(x=p$longitude, y=p$latitude, pch = 18, col= 2, cex = 0.3)
+```
+\
+Question 2b
+```{r}
+plot(NrthAm, xlim=c(-123.35,-122.65),
+     ylim=c(49,49.35), main = "Pokemon in Vancouver")
+est2 = kde2d(x=p$longitude, y=p$latitude,n = c(121,150))
+contour(est2, add=TRUE,col=c(1,2,3,4,5,6),lwd=2)
+```
+\
+Question 2c \
+The peaks of the density plot are within those black/purple regions. Those areas have the highest density/probability.
+Density level from high to low : black -> purple -> cyan - > blue -> green ->red.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
