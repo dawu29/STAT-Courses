@@ -1,0 +1,324 @@
+---
+title: "Assignment 03"
+output: pdf_document
+author: Dawu Liu
+---
+Problem 1 \
+(a) Sample mean vector $\tilde{\bar{x}}$:
+
+\begin{align}
+  \tilde{\bar{x}} &= \begin{pmatrix}
+  63.24528 \\
+  252.50943 \\
+  239.79245 \\
+  165.43396 \\
+  35.69811 \\
+  \end{pmatrix}
+\end{align}
+\
+Sample covariance matrix $S_x$:
+
+\begin{align} 
+  S_x &= \begin{bmatrix}
+  103.150217706821 & -250.511973875181 & -302.178882438316 & -156.089259796807 & -59.0399129172714 \\  -250.511973875181 & 38379.2162554427 & 10171.1654571843 & 19321.8708272859 & 315.791364296081 \\  -302.178882438316 & 10171.1654571843 & 33212.9753265602 & 4627.84179970972 & 1328.76306240929 \\  -156.089259796807 & 19321.8708272859 & 4627.84179970972 & 19363.9042089985 & 366.960449927431 \\  -59.0399129172714 & 315.791364296081 & 1328.76306240929 & 366.960449927431 & 369.176342525399 \\
+  \end{bmatrix} 
+\end{align}
+
+(b) Data matrix $Y$ (scroll down, matrix too big):
+
+\begin{align} 
+  Y &= \begin{bmatrix}
+  -65 & -140 & 302 \\  183 & -20 & 80 \\  148 & -124 & 185 \\  108 & 27 & 30 \\  -325 & 232 & 244 \\  191 & -91 & 162 \\  70 & -253 & 350 \\  6 & 18 & 95 \\  -108 & -215 & 413 \\  -449 & 71 & 297 \\  -541 & 266 & 185 \\  74 & 9 & 105 \\  -624 & 327 & 152 \\  166 & -64 & 104 \\  -744 & 352 & 156 \\  -30 & 198 & 61 \\  -38 & 24 & 191 \\  110 & -50 & 151 \\  131 & -26 & 114 \\  -13 & 125 & 48 \\  41 & -109 & 294 \\  -102 & 50 & 136 \\  156 & -50 & 114 \\  -271 & 154 & 101 \\  -54 & 38 & 127 \\  129 & -243 & 354 \\  -243 & 57 & 253 \\  -42 & -44 & 310 \\  74 & -115 & 522 \\  -231 & -273 & 527 \\  -100 & -114 & 351 \\  -864 & 393 & 160 \\  -854 & -124 & 668 \\  -30 & 154 & 322 \\  18 & 258 & 165 \\  -502 & -276 & 683 \\  -510 & 335 & 65 \\  -138 & -36 & 230 \\  -18 & -53 & 182 \\  191 & -629 & 682 \\  -434 & 121 & 242 \\  44 & -237 & 460 \\  -227 & 397 & 92 \\  -703 & 324 & 613 \\  -2 & -25 & 153 \\  -40 & 256 & 142 \\  -234 & -404 & 725 \\  197 & -127 & 423 \\  -3 & 161 & 424 \\  -227 & 56 & 182 \\  31 & -204 & 534 \\  -349 & 571 & 318 \\  -433 & -254 & 622 \\
+  \end{bmatrix} 
+\end{align}
+
+Sample mean vector $\tilde{\bar{y}}$:
+
+\begin{align}
+  \tilde{\bar{y}} &= \begin{pmatrix}
+  -141.13208 \\
+  12.71698 \\
+  275.49057 \\
+  \end{pmatrix}
+\end{align}
+
+Sample covariance matrix $S_y$:
+
+\begin{align} 
+  S_y &= \begin{bmatrix}
+  80257.0399129173 & -29233.057329463 & -11073.2608853411 \\  -29233.057329463 & 51249.8606676343 & -24054.7815674891 \\  -11073.2608853411 & -24054.7815674891 & 36239.6777939042 \\
+  \end{bmatrix} 
+\end{align}
+\
+(c) 
+The matrix $A$ such that $A\tilde{X}=\tilde{Y}$:
+\begin{align}
+  A &= \begin{bmatrix}
+  3 & 0 & 0 & -2 & 0 \\
+  0 & 1 & -1 & 0 & 0 \\
+  0 & 0 & 1 & 0 & 1 \\
+  \end{bmatrix}
+\end{align}
+Where\
+Row 1 = $(3, 0, 0, -2, 0)$ for $Y1 =  3X_1 + 0X_2 + 0X_3 - 2X_4 + 0X_5$. \
+Row 2 = $(0, 1, -1, -0,0)$ for $Y2 =  0X_1 + 1X_2 - 1X_3 + 0X_4 + 0X_5$. \
+Row 3 = $(0, 0, 1, 0, 1 )$ for $Y3 =  0X_1 + 0X_2 + 1X_3 + 0X_4 + 1X_5$. \
+\
+(d) Sample mean vector $\tilde{\bar{y}} = A \tilde{\bar{x}}$:
+
+\begin{align}
+  \tilde{\bar{y}} &= \begin{pmatrix}
+  -141.13208 \\
+  12.71698 \\
+  275.49057 \\
+  \end{pmatrix}
+\end{align}
+
+Sample covariance matrix $S_y = AS_xA^T$:
+
+\begin{align} 
+  S_y &= \begin{bmatrix}
+  80257.0399129173 & -29233.057329463 & -11073.2608853411 \\  -29233.057329463 & 51249.8606676343 & -24054.7815674891 \\  -11073.2608853411 & -24054.7815674891 & 36239.6777939042 \\
+  \end{bmatrix} 
+\end{align}
+
+Both $\tilde{\bar{y}}$ and $S_y$ are the same compare to part (b). \
+
+\
+Codes used to compute (a), (b), and (d):
+
+```{r}
+library(readxl)
+data<- read_excel("C:/Users/John/Desktop/STAT 445/Data/survival_data.xlsx", col_names = F)
+View(data)
+X <- data[,2:6]
+colnames(X) <- c("X1","X2","X3","X4","X5")
+X
+
+# a
+x_bar <- colMeans(X)
+x_bar
+
+Sx <- cov(X)
+Sx
+
+#b
+Y1 <- 3*X$X1 - 2*X$X4
+Y2 <- X$X2 - X$X3
+Y3 <- X$X3 + X$X5
+
+Y <- cbind(Y1,Y2,Y3)
+Y
+
+y_bar <- colMeans(Y)
+y_bar
+
+Sy <- cov(Y)
+Sy 
+
+# d
+A <- matrix(c(3,0,0,-2,0,0,1,-1,0,0,0,0,1,0,1), ncol = 5, nrow = 3, byrow = T)
+A
+
+A%*%x_bar
+y_bar
+
+A%*%Sx%*%t(A)
+Sy
+
+```
+\newpage
+Problem 2\
+(a) The matrix $A$ such that $A\tilde{X}=\tilde{Y}$:
+
+\begin{align}
+  A &= \begin{bmatrix}
+  2 & 1 & -3 & 0 \\
+  0 & 0 & 0 & 1 \\
+  0 & -2 & 2 & 0 \\
+  \end{bmatrix}
+\end{align}
+
+
+Where\
+Row 1 = $(2,1,-3,0)$ for $Y_1 =  2X_1 + 1X_2 - 3X_3 + 0X_4$. \
+Row 2 = $(0,0, 0,1)$ for $Y_2 =  0X_1 + 0X_2 + 0X_3 + 1X_4$. \
+Row 3 = $(0,-2,2,0)$ for $Y_3 =  0X_1 - 2X_2 + 2X_3 + 0X_4$. \
+
+The parameters for the distribution for $\tilde{Y}$ are: \
+Mean vector $\tilde{\mu_Y}$, where $\tilde{\mu_Y} = A\tilde{\mu}$:
+\begin{align}
+  \tilde{\mu_Y} &= \begin{pmatrix}
+  -2 \\
+  2 \\
+  8 \\
+  \end{pmatrix}
+\end{align}
+
+Covariance matrix $\Sigma_Y$, where $\Sigma_Y = A\Sigma A$:
+
+\begin{align}
+  \Sigma_Y &= \begin{bmatrix}
+  5 & -1 & -2 \\  -1 & 4 & 2 \\  -2 & 2 & 4 \\
+  \end{bmatrix}
+\end{align}
+
+\
+(b)
+Parameters for the distribution for $(X_1,X_4)^T$: \
+Mean vector $\tilde{\mu_{1,4}}$
+
+\begin{align}
+  \tilde{\mu_{1,4}} &= \begin{pmatrix}
+  \mu_1 \\ \mu_4 \\
+  \end{pmatrix}  = \begin{pmatrix}
+  2 \\ 2 \\
+  \end{pmatrix}
+\end{align}
+
+Covariance matrix $\Sigma_{1,4}$, which is formed by the values on the four corners of matrix $\Sigma$
+
+\begin{align} 
+  \Sigma_{1,4} &= \begin{bmatrix}  
+  1 & 1 \\  1 & 4 \\
+  \end{bmatrix} 
+\end{align}
+\
+Codes used to solve (a) and (b):
+```{r}
+# 2
+mu = c(2,-3,1,2)
+mu
+
+Sigma <- matrix(c(1,1,1,1,1,3,2,0,1,2,2,1,1,0,1,4),nrow=4,ncol=4,byrow=T)
+Sigma
+
+# a
+A <- matrix(c(2,1,-3,0,0,0,0,1,0,-2,2,0), ncol = 4, nrow = 3, byrow = T)
+A
+
+mu_y <- A%*%mu
+mu_y
+
+A%*%Sigma%*%t(A)
+
+# b
+new_mu <- mu[c(1,4)]
+new_mu
+
+new_Sigma <- Sigma[c(1,4,2,3),]
+new_Sigma <- new_Sigma[,c(1,4,2,3)]
+new_Sigma <- new_Sigma[c(1,2),c(1,2)]
+new_Sigma
+
+```
+
+
+
+\newpage
+Problem 3 \
+(a)
+Reorder both columns and rows for the covariance matrix $\Sigma$ in the order of $3,6,1,2,4,5$, 
+now the covariance between $X_3$ and $X_6$ are the partition of the first two columns and first two rows,
+the covariance between $X_1$, $X_2$, $X_4$ and $X_5$ are the partition of the last four columns and last four rows.
+We get the new $\Sigma$ matrix:
+
+\begin{align} 
+  \Sigma &= \begin{bmatrix}
+  3 & 1 & 0 & 0 & 0 & 0 \\  1 & 2 & 0 & 0 & 0 & 0 \\  0 & 0 & 4 & 1 & 2 & 0 \\  0 & 0 & 1 & 8 & 2 & 1 \\  0 & 0 & 2 & 2 & 5 & 3 \\  0 & 0 & 0 & 1 & 3 & 6 \\
+  \end{bmatrix} 
+\end{align}
+
+As we can see, in this matrix the intersection between row 3 to 6 and column 1 to 2, row 1 to 2 and column 3 to 6 are all 0's.
+This means there is no correlation between $(X_3, X_6)^T$ and $(X_1, X_2, X_4, X_5)^T$. Therefore they are independent 
+\
+\
+(b) Let $\tilde{Y} = (Y_1, Y_2)$ where $Y_1 = X_1 + X_4$ and $Y_2 = X_2 + X_5$ \
+The matrix $A$ where $A\tilde{X}=\tilde{Y}$ is :
+
+\begin{align}
+  A &= \begin{bmatrix}
+  1 & 0 & 0 & 1 & 0 & 0 \\  0 & 1 & 0 & 0 & 1 & 0 \\
+  \end{bmatrix}
+\end{align}
+
+Compute the parameter of the distribution of $\tilde{Y}$, where covariance matrix $\Sigma_Y=A\Sigma A^T$, get:
+
+\begin{align}
+  \Sigma_Y &= \begin{bmatrix}
+  13 & 6 \\  6 & 16 \\
+  \end{bmatrix}
+\end{align}
+
+As we can see, the covariance between $Y_1$ and $Y_2$ are not all 0's. \
+Therefore $X_1 + X_4$ and $X_2 + X_5$ are dependent.
+\
+\
+(c) Let $\tilde{Z} = (Z_1, Z_2)$ where $Z_1 = X_2$ and $Z_2 = 3X_1 - X_2 + 4X_3 +2X_4 + X_5 + 5X_6$\
+The matrix $A$ where $A\tilde{X}=\tilde{Z}$ is :
+\begin{align}
+  A &= \begin{bmatrix}
+  0 & 1 & 0 & 0 & 0 & 0 \\  3 & -1 & 4 & 2 & 1 & -5 \\
+  \end{bmatrix}
+\end{align}
+
+Compute the parameter of the distribution of $\tilde{Z}$, where covariance matrix $\Sigma_Z=A\Sigma A^T$, get:
+
+\begin{align}
+  \Sigma_Z &= \begin{bmatrix}
+  8 & 0 \\  0 & 148 \\
+  \end{bmatrix}
+\end{align}
+
+As we can see, the covariance between $Z_1$ and $Z_2$ are all 0's. \
+Therefore $X_2$ and $3X_1 - X_2 + 4X_3 +2X_4 + X_5 + 5X_6$ are independent.
+
+\newpage
+Codes used to solve for (a) to (c)
+
+```{r}
+# 3
+mu = c(3,-2,5,1,0,2)
+mu
+
+Sigma <- matrix(c(4,1,0,2,0,0,1,8,0,2,1,0,0,0,3,0,0,1,
+                  2,2,0,5,3,0,0,1,0,3,6,0,0,0,1,0,0,2),nrow=6,ncol=6,byrow=T)
+Sigma
+# a
+new_Sigma <- Sigma[c(3,6,1,2,4,5),]
+new_Sigma <- new_Sigma[,c(3,6,1,2,4,5)]
+new_Sigma
+
+# b
+
+A <- matrix(c(1,0,0,1,0,0,0,1,0,0,1,0), ncol = 6, nrow = 2, byrow = T)
+A
+A%*%Sigma%*%t(A)
+# dependent
+
+# c 
+A <- matrix(c(0,1,0,0,0,0,3,-1,4,2,1,-5), ncol = 6, nrow = 2, byrow = T)
+A
+A%*%Sigma%*%t(A)
+# independent
+
+```
+```{r}
+
+# helper method for latex syntax
+CJ <- function (matrix) {
+  s = ""
+  for (i in 1:nrow(matrix)) {
+    p <- paste(paste(as.character(matrix[i,]), collapse = " & "), "\\ ")
+    s <- paste(s,p)
+  }
+  s <- paste("\begin{align} Y &= \begin{bmatrix}", s, "\\end{bmatrix} \\end{align}")
+  # editing required afterwards
+  return (s)
+}
+CJ(A)
+```
+
+
+
+
