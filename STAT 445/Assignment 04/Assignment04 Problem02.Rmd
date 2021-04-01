@@ -1,0 +1,239 @@
+---
+title: "Assignment04 P02"
+author: Dawu Liu
+output: pdf_document
+---
+
+```{r, echo=FALSE, results='hide',message=FALSE}
+library(forecast)
+library(MESS)
+X <- read.table("C:/Users/John/Desktop/STAT 445/Data/assignment4_data2.txt", sep = ",")
+#a
+S_X <- cov(X) ; x_bar <- colMeans(X)
+S_X; x_bar
+```
+\
+(a) Sample covariance matrix:
+\begin{align} 
+S_X &= \begin{bmatrix}  0.506179723407075 & 0.139961753019714 & 5.72122771503319 \\  0.139961753019714 & 0.143192401019117 & 2.26270794442784 \\  5.72122771503319 & 2.26270794442784 & 86.0487659907118 \\  
+\end{bmatrix} 
+\end{align}
+mean vector :
+\begin{align} 
+\tilde{\bar{x}} &= \begin{pmatrix}  
+2.9989239 \\ 0.3676117 \\ 23.7540326 
+\end{pmatrix} 
+\end{align}
+
+\
+(b) Matrix scatter plot with histograms being the diagonals:
+
+```{r echo=FALSE, results='hide'}
+#b
+par(mfcol=c(3, 3), mar=c(2,2,2,2))
+for(i in 1:3){
+  for(j in 1:3) {
+    if(i != j){
+      plot(X[[i]],X[[j]],type="p", xlab = paste0("X", i), ylab = paste0("X", j))}
+    else{
+      hist(X[[i]], xlab = paste0("X", i), main = paste0("Histogram of X", i), prob=TRUE,cex.main=0.8)
+      lines(density(X[[i]]))}
+  }
+}
+```
+
+\newpage
+Univariate q-q plots:
+
+```{r, echo=FALSE, results='hide',fig.height=4, fig.width=12}
+par(mfrow=c(1, 3))
+for (i in 1:3) {
+  qqnorm(X[[i]], main = paste0("Normal Q-Q Plot of X",i));qqline(X[[i]],col="red")
+}
+```
+We can see in the scatter plots associated with the 2nd variable, data points appear to fan out from the origin, 
+suggesting that those pairs of data are not bivariate normal. The histograms indicate the the 1st 
+variable appears to be very close to normal, the 2nd variable is heavily right skewed,
+and the 3rd variable is a bit right screwed. The q-q plots also indicate the 1st variable appears 
+to be close to normal as it fits the straight line closely, but the 2nd and 3rd variables 
+do not as they don't fit the straight line well. The data are not consistent with a normal distribution.
+
+```{r  echo=FALSE, results='hide', fig.show='hide'}
+# c
+lam <- vector()
+for (i in 1:3) {
+  tmp <- MASS::boxcox(X[,i]~1,lambda=seq(-5,5,0.5))
+  lam[i] <- tmp$x[which.max(tmp$y)] 
+
+}
+lam
+Y1 <- BoxCox(X$V1,lam[1])
+Y2 <- BoxCox(X$V2,lam[2])
+Y3 <- BoxCox(X$V3,lam[3])
+Y <- as.data.frame(cbind(Y1,Y2,Y3))
+```
+\
+(c) The parameter $\lambda's$ used in the Box-Cox transformations are \textbf{1.2626263, 0.2525253, 0.4545455.} \
+As expected, the $\lambda$(power) for the 1st variable is close to one because the variable is close to normal.
+The 2nd variable has the strongest power change as it is strongly skewed.
+Scroll down to the code section if checking new data set $Y$ is needed, since the matrix is very long.
+
+\
+(d) Matrix scatter plot and univariate q-q plots for the new data set $Y$:
+
+```{r, echo=FALSE, results='hide',fig.height=4, fig.width=7}
+# d
+par(mfcol=c(3, 3), mar=c(2,2,2,2))
+for(i in 1:3){
+  for(j in 1:3) {
+    if(i != j){
+      plot(Y[[i]],Y[[j]],type="p", xlab = paste0("Y", i), ylab = paste0("Y", j))}
+    else{
+      hist(Y[[i]], xlab = paste0("Y", i), main = paste0("Histogram of Y", i), prob=TRUE,cex.main=0.8)
+      lines(density(Y[[i]]))}
+  }
+}
+```
+
+```{r, echo=FALSE, results='hide',fig.height=4, fig.width=12}
+par(mfrow=c(1, 3))
+for (i in 1:3) {
+  qqnorm(Y[[i]],main = paste0("Normal Q-Q Plot of Y",i));qqline(Y[[i]],col="red")
+}
+```
+The Box-Cox transformation improved the data set and made it consistent with a normal distribution or at least pretty close. 
+The histograms of all three variables appear to be normal.
+The data points in matrix scatter plots for each of all three variables appear to fit in an ellipse, suggesting each pair of the
+the data is bivariate normal. Also in the q-q plots, the points in all three variables appear to fit the straight lines well, with only
+light-tailed for the 2nd and 3rd variables, which is probably due to the sample size.
+
+```{r, echo=FALSE, results='hide'}
+# e
+S_Y <- cov(Y)
+y_bar<- colMeans(Y)
+
+S_Y; S_X-S_Y;
+
+y_bar;x_bar-y_bar;
+```
+\
+(e) New sample covariance matrix:
+\begin{align} 
+S_Y &= \begin{bmatrix}  0.878946352721069 & 0.416576516113662 & 1.36819113251324 \\  0.416576516113662 & 0.561684889548861 & 0.851594673734675 \\  1.36819113251324 & 0.851594673734675 & 2.6931318559889 \\  
+\end{bmatrix} 
+\end{align}
+
+New mean vector:
+\begin{align} 
+\tilde{\bar{y}} &= \begin{pmatrix}  
+2.407611 \\ -1.144121 \\ 6.911003 
+\end{pmatrix} 
+\end{align}
+
+Subtract the new covariance matrix from the old covariance matrix, we get:
+\begin{align} 
+S_X - S_Y &= \begin{bmatrix}  -0.3728 & -0.2766 & 4.353 \\  -0.2766 & -0.4185 & 1.4111 \\  4.353 & 1.4111 & 83.3556 \\  
+\end{bmatrix} 
+\end{align}
+
+Transforming the data affects the covariances between all three variables. The biggest change is the covariance
+between the 1st and 3rd variables, followed by the 2nd and 3rd. 
+The variance of the 3rd variable itself has a massive decrease of 83.36 from 86.05.
+
+Subtract the new mean vector from the old mean vector, we get:
+\begin{align} 
+\tilde{\bar{x}}-\tilde{\bar{y}} &= \begin{pmatrix}  
+0.5913 \\ 1.5117 \\ 16.8430
+\end{pmatrix} 
+\end{align}
+
+The means of all three variables have decreased, the biggest change is the mean for the 3rd variable, which
+has a massive decrease of 16.84 from 23.75.
+
+\
+Code used to solve the questions(graphs are hidden):
+```{r fig.show='hide'}
+rm(list = ls())
+library(forecast)
+library(MESS)
+X <- read.table("C:/Users/John/Desktop/STAT 445/Data/assignment4_data2.txt", sep = ",")
+#a
+S_X <- cov(X) ; x_bar <- colMeans(X)
+S_X; x_bar
+
+#b
+par(mfcol=c(3, 3), mar=c(2,2,2,2))
+for(i in 1:3){
+  for(j in 1:3) {
+    if(i != j){
+      plot(X[[i]],X[[j]],type="p", xlab = paste0("X", i), ylab = paste0("X", j))}
+    else{
+      hist(X[[i]], xlab = paste0("X", i), main = paste0("Histogram of X", i), prob=TRUE,cex.main=0.8)
+      lines(density(X[[i]]))}
+  }
+}
+
+# c
+lam <- vector()
+for (i in 1:3) {
+  tmp <- MASS::boxcox(X[,i]~1,lambda=seq(-5,5,0.5))
+  lam[i] <- tmp$x[which.max(tmp$y)] 
+
+}
+lam
+Y1 <- BoxCox(X$V1,lam[1])
+Y2 <- BoxCox(X$V2,lam[2])
+Y3 <- BoxCox(X$V3,lam[3])
+Y <- as.data.frame(cbind(Y1,Y2,Y3))
+Y
+
+# d
+par(mfcol=c(3, 3), mar=c(2,2,2,2))
+for(i in 1:3){
+  for(j in 1:3) {
+    if(i != j){
+      plot(Y[[i]],Y[[j]],type="p", xlab = paste0("Y", i), ylab = paste0("Y", j))}
+    else{
+      hist(Y[[i]], xlab = paste0("Y", i), main = paste0("Histogram of Y", i), prob=TRUE,cex.main=0.8)
+      lines(density(Y[[i]]))}
+  }
+}
+
+par(mfrow=c(1, 3), mar=c(2,2,2,2))
+for (i in 1:3) {
+  qqnorm(Y[[i]],main = paste0("Normal Q-Q Plot of Y",i));qqline(Y[[i]],col="red")
+}
+
+# e
+S_Y <- cov(Y)
+y_bar<- colMeans(Y)
+
+S_Y; S_X-S_Y;
+
+y_bar;x_bar-y_bar;
+```
+
+
+
+```{r echo=FALSE, results='hide'}
+CJ <- function (matrix) {
+  s = ""
+  for (i in 1:nrow(matrix)) {
+    p <- paste(paste(as.character(matrix[i,]), collapse = " & "), "\\ ")
+    s <- paste(s,p)
+  }
+  s <- paste("\begin{align} Y &= \begin{bmatrix}", s, "\\end{bmatrix} \\end{align}")
+  # editing required afterwards
+  return (s)
+}
+round(x_bar-y_bar,4)
+
+x_bar;y_bar
+S_X;S_Y
+round(X,4)
+round(Y,4)
+```
+
+
+
+
