@@ -1,0 +1,330 @@
+---
+title: "Assignment06"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(readxl)
+library(psych)
+protein <- read_excel("C:/Users/John/Desktop/STAT 445/Data/europe_protein_data.xls")[,-1]
+R <- cor(protein)
+maketable <- function(){
+  table <- matrix(NA, nrow=11,ncol=6)
+  rownames(table) <- c(colnames(R), "Var. Acc. For", "Prop. Tot. Var.")
+  colnames(table) <- c("load 1", "load 2", "load 3", "load 4", "commun.", "spec.var.")
+  return(table)
+}
+
+filltable <- function(t, x) {
+  for(i in 1:4){
+    t[1:9,i] <- x$loadings[,i]
+    t[10:11,i] <- x$Vaccounted[1:2,i]
+  }
+  t[1:9,5] <- x$communality
+  t[1:9,6] <- x$uniquenesses
+  return(t)
+}
+
+```
+
+4 factors and correlation matrix R are used for all four analyses. 
+We assume the data is normal in order to make maximum likelihood method work. 
+There are 25 observations for each of the 9 variables. 
+Results have been round to 4 decimal places.
+
+
+
+
+\textbf{(a) Principal components method without rotation.}
+
+\
+i. Display the table of results
+```{r echo=FALSE}
+a <- principal(R,nfactors=4, n.obs=25, rotate="none")
+t1 <- maketable()
+t1 <- filltable(t1,a)
+round(t1, 4)
+```
+\
+ii. Show the estimate $\hat{L}\hat{L}^T+\hat{\Psi}$
+```{r echo=FALSE}
+estimate1 <-a$loadings%*%t(a$loadings)+diag(a$uniquenesses)
+colnames(estimate1)=NULL; rownames(estimate1)=NULL
+round(estimate1,4)
+```
+\
+iii. Show the error matrix $E=R-(\hat{L}\hat{L}^T+\hat{\Psi})$ and $\|{E}\|$
+
+E = 
+```{r echo=FALSE}
+error1 <- R-estimate1
+colnames(error1)=NULL; rownames(error1)=NULL
+round(error1,4)
+```
+
+$\|{E}\|$ = 
+```{r echo=FALSE}
+round(sqrt(sum(error1^2)),4)
+```
+
+
+
+
+\textbf{(b) Principal components method with varimax rotation.}
+
+\
+i. Display the table of results
+```{r echo=FALSE}
+b <- principal(R,nfactors=4, n.obs=25, rotate="varimax")
+t2 <- maketable()
+t2 <- filltable(t2,b)
+round(t2, 4)
+```
+\
+ii. Show the estimate $\hat{L}\hat{L}^T+\hat{\Psi}$
+```{r echo=FALSE}
+estimate2 <-b$loadings%*%t(b$loadings)+diag(b$uniquenesses)
+colnames(estimate2)=NULL; rownames(estimate2)=NULL
+round(estimate2,4)
+```
+\
+iii. Show the error matrix $E=R-(\hat{L}\hat{L}^T+\hat{\Psi})$ and $\|{E}\|$
+
+E = 
+```{r echo=FALSE}
+error2 <- R-estimate2
+colnames(error2)=NULL; rownames(error2)=NULL
+round(error2,4)
+```
+
+$\|{E}\|$ = 
+```{r echo=FALSE}
+round(sqrt(sum(error2^2)),4)
+```
+
+
+
+
+
+\textbf{(c) Maximum likelihood method without varimax rotation.}
+\
+i. Display the table of results
+```{r echo=FALSE}
+c <- fa(R,nfactors=4, n.obs=25, rotate="none", fm="ml")
+t3 <- maketable()
+t3 <- filltable(t3,c)
+round(t3, 4)
+```
+\
+ii. Show the estimate $\hat{L}\hat{L}^T+\hat{\Psi}$
+```{r echo=FALSE}
+estimate3 <-c$loadings%*%t(c$loadings)+diag(c$uniquenesses)
+colnames(estimate3)=NULL; rownames(estimate3)=NULL
+round(estimate3,4)
+```
+\
+iii. Show the error matrix $E=R-(\hat{L}\hat{L}^T+\hat{\Psi})$ and $\|{E}\|$
+
+E = 
+```{r echo=FALSE}
+error3 <- R-estimate3
+colnames(error3)=NULL; rownames(error3)=NULL
+round(error3,4)
+```
+
+$\|{E}\|$ = 
+```{r echo=FALSE}
+round(sqrt(sum(error3^2)),4)
+```
+
+
+
+
+\textbf{(d) Maximum likelihood method with varimax rotation.}
+\
+i. Display the table of results
+```{r echo=FALSE}
+d <- fa(R,nfactors=4, n.obs=25, rotate="varimax", fm="ml")
+t4 <- maketable()
+t4 <- filltable(t4,d)
+round(t4, 4)
+```
+\
+ii. Show the estimate $\hat{L}\hat{L}^T+\hat{\Psi}$
+```{r echo=FALSE}
+estimate4 <-d$loadings%*%t(d$loadings)+diag(d$uniquenesses)
+colnames(estimate4)=NULL; rownames(estimate4)=NULL
+round(estimate4,4)
+```
+\
+iii. Show the error matrix $E=R-(\hat{L}\hat{L}^T+\hat{\Psi})$ and $\|{E}\|$
+
+E = 
+```{r echo=FALSE}
+error4 <- R-estimate4
+colnames(error4)=NULL; rownames(error4)=NULL
+round(error4,4)
+```
+
+$\|{E}\|$ = 
+```{r echo=FALSE}
+round(sqrt(sum(error4^2)),4)
+```
+
+\textbf{(e)}
+
+\
+i. \textbf{Both} methods produce a reasonable good approximation. Since rotation doesn't affect the error, 
+there are only two error matrices, one for each method. 
+
+Three criteria are used to check the errors:
+
+1. Check $\|E\|$ and compare to $\|R\|$ ,where $\|R\|$ = 4.618.
+
+2. Check the entries in error matrix and their relative error proportion, which is calculated by dividing 
+each entry in the error matrix by its corresponding entry in the R matrix, then take absolute value of it.
+
+3. Check the average (mean) of the relative error proportion.
+
+```{r echo=FALSE, results = 'hide'}
+length(which(abs(error1/R)<0.15))
+length(which(abs(error3/R)<0.15))
+round(sqrt(sum(R^2)),4)
+mean(abs(error1/R))
+mean(abs(error3/R))
+```
+
+For principal components method error matrix: 
+
+1. $\|E\|$ is relatively small compared to $\|R\|$. \
+2. \textbf{53} out of \textbf{81} entries has an error \textbf{below 15\%}. \
+3. Average relative error is \textbf{17.12\%}, still reasonable. 
+
+For maximum likelihood method error matrix:
+
+1. $\|E\|$ is relatively small compared to $\|R\|$. \
+2. \textbf{71} out of \textbf{81} entries has an error \textbf{below 15\%} \
+3. Average relative error is \textbf{8.07\%}, which is pretty reasonable.
+
+Therefore, \textbf{both} methods produce a reasonable good approximation.  \
+
+\
+ii. \textbf{Maximum likelihood method} produces the better approximation here. It has the smaller $\|E\|\approx 0.22$ and 
+average relative error %. 
+Most of the entries in the maximum likelihood error matrix have \textbf{smaller maginitudes} 
+than their counter part in the principal components error matrix. We can observe this by 
+\textbf{subtracting the absolute values} of the matrices: \
+abs(E(principal components)) - abs(E(maximum likelihood)) = 
+
+```{r echo=FALSE}
+round(abs(error1)-abs(error3),4)
+```
+
+Nearly all the entries of the result are positive, meaning the entries in maximum likelihood 
+error matrix have \textbf{smaller errors} in general.
+
+
+\newpage
+Code used to solve the questions:
+```{r message=FALSE, warning=FALSE}
+rm(list = ls())
+library(readxl)
+library(psych)
+protein <- read_excel("C:/Users/John/Desktop/STAT 445/Data/europe_protein_data.xls")[,-1]
+R <- cor(protein)
+maketable <- function(){
+  table <- matrix(NA, nrow=11,ncol=6)
+  rownames(table) <- c(colnames(R), "Var. Acc. For", "Prop. Tot. Var.")
+  colnames(table) <- c("load 1", "load 2", "load 3", "load 4", "commun.", "spec.var.")
+  return(table)
+}
+
+filltable <- function(t, x) {
+  for(i in 1:4){
+    t[1:9,i] <- x$loadings[,i]
+    t[10:11,i] <- x$Vaccounted[1:2,i]
+  }
+  t[1:9,5] <- x$communality
+  t[1:9,6] <- x$uniquenesses
+  return(t)
+}
+
+# a
+# i 
+a <- principal(R,nfactors=4, n.obs=25, rotate="none")
+t1 <- maketable()
+t1 <- filltable(t1,a)
+round(t1, 4)
+# ii
+estimate1 <-a$loadings%*%t(a$loadings)+diag(a$uniquenesses)
+colnames(estimate1)=NULL; rownames(estimate1)=NULL
+round(estimate1,4)
+# iii
+error1 <- R-estimate1
+colnames(error1)=NULL; rownames(error1)=NULL
+round(error1,4)
+round(sqrt(sum(error1^2)),4)
+
+# b
+# i
+b <- principal(R,nfactors=4, n.obs=25, rotate="varimax")
+t2 <- maketable()
+t2 <- filltable(t2,b)
+round(t2, 4)
+# ii
+estimate2 <-b$loadings%*%t(b$loadings)+diag(b$uniquenesses)
+colnames(estimate2)=NULL; rownames(estimate2)=NULL
+round(estimate2,4)
+# iii
+error2 <- R-estimate2
+colnames(error2)=NULL; rownames(error2)=NULL
+round(error2,4)
+round(sqrt(sum(error2^2)),4)
+
+# c
+# i
+c <- fa(R,nfactors=4, n.obs=25, rotate="none", fm="ml")
+t3 <- maketable()
+t3 <- filltable(t3,c)
+round(t3, 4)
+# ii
+estimate3 <-c$loadings%*%t(c$loadings)+diag(c$uniquenesses)
+colnames(estimate3)=NULL; rownames(estimate3)=NULL
+round(estimate3,4)
+# iii
+error3 <- R-estimate3
+colnames(error3)=NULL; rownames(error3)=NULL
+round(error3,4)
+round(sqrt(sum(error3^2)),4)
+
+# d
+# i
+d <- fa(R,nfactors=4, n.obs=25, rotate="varimax", fm="ml")
+t4 <- maketable()
+t4 <- filltable(t4,d)
+round(t4, 4)
+# ii
+estimate4 <-d$loadings%*%t(d$loadings)+diag(d$uniquenesses)
+colnames(estimate4)=NULL; rownames(estimate4)=NULL
+round(estimate4,4)
+# iii
+error4 <- R-estimate4
+colnames(error4)=NULL; rownames(error4)=NULL
+round(error4,4)
+round(sqrt(sum(error4^2)),4)
+
+# e
+# i
+length(which(abs(error1/R)<0.15))
+length(which(abs(error3/R)<0.15))
+round(sqrt(sum(R^2)),4)
+mean(abs(error1/R))
+mean(abs(error3/R))
+# ii
+round(abs(error1)-abs(error3),4)
+
+
+
