@@ -1,0 +1,330 @@
+---
+title: "Assignment07"
+author: "Dawu Liu"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(readxl)
+library(MESS)
+library(factoextra)
+wheat <- as.data.frame(read_excel("C:/Users/John/Desktop/STAT 445/Data/winter_wheat.xlsx"))
+rownames(wheat) <- wheat[,1]
+wheat <- wheat[,-1]
+d=dist(wheat,method="euclidean")
+d
+```
+\textbf{Question 1}
+
+\textbf{(a)} Nearest Neighbor
+
+i.
+
+```{r echo=FALSE}
+a <- hclust(d=d, method="single")
+fviz_dend(a, cex=0.5, k=3, main="Dendrogram using Nearest Neighbor",
+          color_labels_by_k=FALSE, rect=TRUE)
+clustera <- cutree(a, k=3)
+clustera
+```
+
+ii. Cluster list
+
+Clusters  | Observations
+-- | -------------
+Cluster 1 | Cambridge, Cockle Park, Harpers Adams, Headley Hall, Morley,  Myerscough, Rosemaund, Seale-Hayne, Sparsholt, Terrington
+Cluster 2 | Sutton Bonington
+Cluster 3 | Wye
+
+\textbf{(b)} Furthest Neighbor
+
+i.
+
+```{r echo=FALSE}
+b <- hclust(d=d, method="complete")
+fviz_dend(b, cex=0.5, k=3, main="Dendrogram using Furthest Neighbor",
+          color_labels_by_k=FALSE, rect=TRUE)
+clusterb <- cutree(b, k=3)
+clusterb 
+```
+
+ii. Cluster list
+
+Clusters  | Observations
+-- | -------------
+Cluster 1 | Cambridge, Cockle Park, Headley Hall, Rosemaund, Terrington 
+Cluster 2 | Harpers Adams, Morley, Myerscough, Seale-Hayne, Sparsholt 
+Cluster 3 | Sutton Bonington, Wye
+
+\textbf{(c)} Group Average
+
+i.
+
+```{r echo=FALSE}
+c <- hclust(d=d, method="average")
+fviz_dend(c, cex=0.5, k=3, main="Dendrogram using Group Average",
+          color_labels_by_k=FALSE, rect=TRUE)
+clusterc <- cutree(c, k=3)
+clusterc 
+```
+
+ii. Cluster list
+
+Clusters  | Observations
+-- | -------------
+Cluster 1 | Cambridge, Cockle Park, Headley Hall, Rosemaund, Terrington
+Cluster 2 | Harpers Adams, Morley, Myerscough, Sparsholt, Sutton Bonington, Wye
+Cluster 3 | Seale-Hayne
+
+
+\textbf{(d)} Matrix scatter plots of the data
+
+In all three matrix scatter plots, the cluster assignments are labeled by colors
+
+```{r echo=FALSE, fig.height=4, fig.width=6}
+pairs(wheat, col = clustera, pch = 20, oma = c(3,3,9,9),
+      main ="Nearest Neighbor")
+par(xpd = TRUE)
+legend("topright", col = unique(clustera), pch=c(20,20,20),
+       legend = levels(factor(clustera)),
+       cex = 0.6)
+```
+
+In Nearest Neighbor method, cluster 2, and 3 are singleton clusters. \
+On year 1970 vs year 1971, cluster 2 and 3 are overlapped with cluster 1. \
+On year 1971 vs year 1973, cluster 2 is overlapped with cluster 1.
+
+
+```{r echo=FALSE, fig.height=4, fig.width=6}
+pairs(wheat, col = clusterb, pch = 20, oma = c(3,3,9,9),
+      main ="Furthest Neighbor")
+par(xpd = TRUE)
+legend("topright", col = unique(clusterb), pch=c(20,20,20),
+       legend = levels(factor(clusterb)),
+       cex = 0.6)
+```
+ 
+In Furthest Neighbor method, there are some obvious overlapping.\
+On year 1970 vs year 1971, cluster 2 and 3 are overlapped with cluster 1. \
+On year 1971 vs year 1972, cluster 2 is overlapped with cluster 1. \
+On year 1971 vs year 1973, cluster 2 is overlapped with cluster 3. \
+
+
+```{r echo=FALSE, fig.height=4, fig.width=6}
+pairs(wheat, col = clusterc, pch = 20, oma = c(3,3,9,9),
+      main ="Group Average")
+par(xpd = TRUE)
+legend("topright", col = unique(clusterc), pch=c(20,20,20),
+       legend = levels(factor(clusterc)),
+       cex = 0.6)
+```
+
+In Group Average method, cluster 3 is singleton cluster. \
+On year 1970 vs year 1971, cluster 2 is overlapped with cluster 1. \
+On year 1970 vs year 1973, cluster 2 is overlapped with cluster 3. \
+
+Some comparisons of the three methods:
+
+ * In Nearest Neighbor, Sutton Bonington and Wye are both singleton cluster, and the rest of the observations are in one cluster. But in Furthest Neighbor, Sutton Bonington and Wye are grouped as one cluster, and the rest of the observations are splitted into 2 clusters.
+
+ * Furthest Neighbor and Group Average have identical cluster 1. But Seale-Hayne is in cluster 2, Sutton Bonington and Wye 
+ are in cluster 3 for Furthest Neighbor. Seale-Hayne is in cluster 3, Sutton Bonington and Wye 
+ are in cluster 2 for Group Average. (comparison shown below)
+ 
+Clusters# | Furthest Neighbor | Group Average
+-- | -- | ---
+Cluster 2 | Harpers Adams, Morley, Myerscough, \textcolor{blue}{Seale-Hayne,} Sparsholt | Harpers Adams, Morley, Myerscough, Sparsholt, \textcolor{red}{Sutton Bonington, Wye}
+Cluster 3 | \textcolor{red}{Sutton Bonington, Wye} | \textcolor{blue}{Seale-Hayne}
+
+
+
+\newpage
+\textbf{Question 2}
+
+\textbf{(a)} Standardize the data
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+data <- read_excel("C:/Users/John/Desktop/STAT 445/Data/temphumevap_strip.xlsx", col_names = FALSE)
+data <- scale(data, center = TRUE, scale = TRUE)
+```
+```{r}
+# the first row
+round(data[1,], 5)
+
+# the last row
+round(data[nrow(data),], 5)
+```
+
+\textbf{(b)} Number of observations in each cluster:
+
+```{r, echo=FALSE, results='hide', message=FALSE,warning = FALSE}
+set.seed(445)
+km <- kmeans(data, centers=4)
+length(which(km$cluster==1))
+length(which(km$cluster==2))
+length(which(km$cluster==3))
+length(which(km$cluster==4))
+km$cluster
+```
+
+Cluster 1: 6\
+Cluster 2: 9\
+Cluster 3: 10\
+Cluster 4: 20\
+
+\textbf{(c)} Conduct a principal components analysis and display the scree Plot
+
+```{r echo=FALSE, fig.height=3.5, fig.width=4}
+pc <- prcomp(data,center=T,scale=T)
+plot(get_eigenvalue(pc)[,1], type = "o", pch = 15, main = "Scree Plot",
+     xlab = "Principal Component Number", ylab = "Eigenvalues")
+axis(side = 1, at = c(1:10))
+```
+
+Two principal components are sufficient, as the plot is suggesting keep 2 PCs. From PC3 and on, 
+PCs have relatively small variances.
+
+\textbf{(d)} PC1 vs PC2 scatter plot with clusters colored
+
+
+```{r echo=FALSE, results='hide'}
+table <- as.data.frame(pc$x)
+table$cluster <- factor(km$cluster)
+get_eigenvalue(pc)$variance.percent
+plot(x=table$PC1,y=table$PC2,cex=2,pch=19,
+     col=c("red","purple","green","cyan")[table$cluster],
+     xlab="PC1 (63.02%)",ylab="PC2 (21.19%)")
+text(PC2~PC1, labels=rownames(table),data=table, cex=0.9, font=0.5)
+legend("bottomleft", col = c("red","green","cyan","purple"), 
+       pch=c(19,19,19),
+       legend = c(1,2,3,4), cex = 0.6)
+```
+The cluster assignments are labeled by four colors, the numbers on data points are the observation numbers.  
+
+The k-means analysis yields well-defined clusters. There are clear divides between each cluster, with no overlapping.
+
+\textbf{(e)}
+
+```{r echo=FALSE, fig.height=3, fig.width=6}
+di=dist(data,method="euclidean")
+ward <- hclust(d=di, method="ward.D")
+fviz_dend(ward, cex=0.6, k=4, main="Dendrogram using Ward's method", 
+          k_colors = c("red","green","cyan","purple"),
+          color_labels_by_k=FALSE, rect=TRUE)
+
+
+```
+
+For easier comparison, I've matched the colors and order for each of the 4 clusters in both methods.
+
+By comparing the results of (d) and (e), the first (red) and second (green) clusters are identical between the two methods. 
+The only difference is that, in k-means one observation (observation 12) is in cluster 3 (cyan), but in Ward's method 
+observation 12 is in cluster 4 (purple). And the rest of the clusters are the same. Both methods yield very similar results. \
+
+\newpage
+Code used to solve the question:
+
+```{r fig.show='hide', message=FALSE, warning=FALSE}
+rm(list = ls())
+library(readxl)
+library(MESS)
+library(factoextra)
+
+# Question 1
+wheat <- as.data.frame(read_excel("C:/Users/John/Desktop/STAT 445/Data/winter_wheat.xlsx"))
+rownames(wheat) <- wheat[,1]
+wheat <- wheat[,-1]
+d=dist(wheat,method="euclidean")
+
+# a
+a <- hclust(d=d, method="single")
+fviz_dend(a, cex=0.4, k=3, main="Dendrogram using Nearest Neighbor",
+          color_labels_by_k=TRUE, rect=TRUE)
+clustera <- cutree(a, k=3)
+clustera
+
+# b
+b <- hclust(d=d, method="complete")
+fviz_dend(b, cex=0.4, k=3, main="Dendrogram using Furthest Neighbor",
+          color_labels_by_k=TRUE, rect=TRUE)
+clusterb <- cutree(b, k=3)
+clusterb 
+
+# c
+c <- hclust(d=d, method="average")
+fviz_dend(c, cex=0.4, k=3, main="Dendrogram using Group Average",
+          color_labels_by_k=TRUE, rect=TRUE)
+clusterc <- cutree(c, k=3)
+clusterc 
+
+# d
+pairs(wheat, col = clustera, pch = 20, oma = c(3,3,9,9),
+      main ="Nearest Neighbor")
+par(xpd = TRUE)
+legend("topright", col = unique(clustera), pch=c(20,20,20),
+       legend = levels(factor(clustera)),
+       cex = 0.6)
+
+pairs(wheat, col = clusterb, pch = 20, oma = c(3,3,9,9),
+      main ="Furthest Neighbor")
+par(xpd = TRUE)
+legend("topright", col = unique(clusterb), pch=c(20,20,20),
+       legend = levels(factor(clusterb)),
+       cex = 0.6)
+
+pairs(wheat, col = clusterc, pch = 20, oma = c(3,3,9,9),
+      main ="Group Average")
+par(xpd = TRUE)
+legend("topright", col = unique(clusterc), pch=c(20,20,20),
+       legend = levels(factor(clusterc)),
+       cex = 0.6)
+```
+
+\newpage
+Code used to solve the question:
+
+```{r fig.show='hide', message=FALSE, warning=FALSE}
+# Question 2
+data <- read_excel("C:/Users/John/Desktop/STAT 445/Data/temphumevap_strip.xlsx", col_names = FALSE)
+data <- scale(data, center = TRUE, scale = TRUE)
+
+# a
+round(data[1,], 5)
+round(data[nrow(data),], 5)
+
+# b
+set.seed(445)
+km <- kmeans(data, centers=4)
+length(which(km$cluster==1))
+length(which(km$cluster==2))
+length(which(km$cluster==3))
+length(which(km$cluster==4))
+km$cluster
+
+# c
+pc <- prcomp(data,center=T,scale=T)
+screeplot(pc,type="l", main = "Scree Plot") 
+
+# d
+table <- as.data.frame(pc$x)
+table$cluster <- factor(km$cluster)
+get_eigenvalue(pc)$variance.percent
+plot(x=table$PC1,y=table$PC2,cex=2,pch=19,
+     col=c("red","purple","green","cyan")[table$cluster],
+     xlab="PC1 (63.02%)",ylab="PC2 (21.19%)")
+text(PC2~PC1, labels=rownames(table),data=table, cex=0.9, font=0.5)
+legend("bottomleft", col = c("red","green","cyan","purple"), 
+       pch=c(19,19,19),
+       legend = c(1,2,3,4), cex = 0.6)
+
+# e
+di=dist(data,method="euclidean")
+ward <- hclust(d=di, method="ward.D")
+fviz_dend(ward, cex=0.5, k=4, main="Dendrogram using Ward's method", 
+          k_colors = c("red","green","cyan","purple"),
+          color_labels_by_k=TRUE, rect=TRUE)
+```
+
+
+
+
