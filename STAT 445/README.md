@@ -1,4 +1,4 @@
-APPLIED MULTIVARIATE ANALYSIS featuring
+APPLIED MULTIVARIATE ANALYSIS featuring:
 
 Multivariate normal distribution
 
