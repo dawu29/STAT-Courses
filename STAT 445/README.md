@@ -1,6 +1,9 @@
 APPLIED MULTIVARIATE ANALYSIS featuring
 
-Multivariate normal distribution \n
-Principal components \n
-Factor analysis \n
-Clustering \n
+Multivariate normal distribution
+
+Principal components
+
+Factor analysis
+
+Clustering
