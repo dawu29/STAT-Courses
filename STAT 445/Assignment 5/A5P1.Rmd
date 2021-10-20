@@ -1,0 +1,322 @@
+---
+title: "A5P1"
+author: "Dawu Liu"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r, echo=FALSE, results='hide', message=FALSE,warning = FALSE}
+library(readxl)
+library(factoextra)
+X <- read_excel("C:/Users/John/Desktop/STAT 445/Data/temperaturedata-clean.xlsx")
+```
+In this assignment, principal component is written as \textbf{PC} sometimes for short.
+
+Also, here are the keys for temperature data that will be analyzed below:
+
+x1 = maximum daily air temperature
+
+x2 = minimum daily air temperature
+
+x3 = integrated area under daily air temperature curve
+
+x4 = maximimum daily soil temperature
+
+x5 = mininum daily soil temperature
+
+x6 = integrated area under soil temperature
+
+x7 = maximum daily relative humidity
+
+x8 = minimum daily relative humidity
+
+x9 = integrated area under daily humidity
+
+x10 = total wind, miles per day
+
+x11 = evaporation
+
+\textbf{(a)} \
+
+Sample covariance matrix \textbf{S}
+```{r, echo = FALSE}
+S <- cov(X)
+round(S,4)
+```
+
+Sample correlation matrix \textbf{R}
+```{r, echo = FALSE}
+R <- cor(X)
+round(R,4)
+```
+\textbf{(b) and (c)}\
+
+PCA using covariance matrix \textbf{S} 
+```{r, echo = FALSE}
+S_pr = prcomp(X, center = TRUE, scale. = FALSE)
+S_eigen_table = get_eigenvalue(S_pr)
+```
+\
+i. The eigenvalues are:
+```{r, echo = FALSE}
+round(S_eigen_table[,1], 4)
+```
+The first eigenvalue is massively larger compared to the rest, and it accounts for the most of the total variance. 
+(table shown in ii)
+
+\
+ii.
+
+Criteria 1, eigenvalues and their cumulative proportions table
+```{r, echo = FALSE}
+round(S_eigen_table,4)
+```
+This method suggests to keep \textbf{1} principal component which gives 91.5% of the total variance.\
+
+Criteria 2, check which eigenvalue(s) is greater than the mean of eigenvalues
+
+The mean of the eigenvalues is:
+```{r, echo = FALSE}
+mean(S_eigen_table[,1])
+```
+This method also suggests to keep \textbf{1} principal component. \
+
+Criteria3, scree plot
+
+```{r,echo = FALSE,fig.height=4, fig.width=4}
+plot(S_eigen_table[,1], type = "o", pch = 15, main = "Scree Plot",
+     xlab = "Principal Component Number", ylab = "Eigenvalues")
+```
+
+The "bend" occurs at PC2, indicating from PC2 and on, the the eigenvalues are relatively small. 
+This method also suggests to keep \textbf{1} principal component. \
+
+Overall, \textbf{1} principal component is retained.
+
+But in order to make a scatter plot, we will use 2 principal components.\
+
+\
+iii.
+
+The eigenvectors for the principal components:
+```{r, echo = FALSE}
+e_S1 <- as.vector(S_pr$rotation[,1])
+e_S2 <- as.vector(S_pr$rotation[,2])
+```
+$(\tilde{\hat{e_1}})^T$ = 
+```{r, echo = FALSE}
+round(e_S1, 4)
+```
+
+$(\tilde{\hat{e_2}})^T$ = 
+```{r, echo = FALSE}
+round(e_S2, 4)
+```
+\
+iv.
+
+Almost all of PC1 depends on $x_{10}$, representing total wind (miles per day).
+For PC2, we see $x_3$, $x_6$, $x_9$, and $x_{11}$ have significantly large magnitudes than the rest, 
+means the majority of PC2 depends on integrated areas under the temperature/humidity curves and the evaporation. 
+Also, PC2 shows the contrast between integrated area under daily humidity on one hand, and integrated 
+area under daily air temperature, soil temperature, and evaporation on the other hand.
+
+\
+v.
+
+Scatter plot for PC2 vs PC1
+
+```{r, echo = FALSE, fig.height=5, fig.width=6}
+plot(S_pr$x[,1], S_pr$x[,2], xlab = "PC1 (91.48%)", ylab = "PC2 (6.52%)", pch = 20)
+text(S_pr$x[,1], S_pr$x[,2], pos = 3, offset = 0.3, cex = 0.5)
+abline(v = 0, h = 0)
+```
+
+The density of the plot becomes higher as the PC1 value increases and PC2 value decreases. About half of the data points 
+are grouped toward the right bottom portion of the plot.
+
+
+\
+PCA using sample correlation matrix \textbf{R}
+```{r, echo = FALSE}
+R_pr = prcomp(X, center = TRUE, scale. = TRUE)
+R_eigen_table = get_eigenvalue(R_pr)
+```
+\
+i. The eigenvalues are:
+```{r, echo = FALSE}
+round(R_eigen_table[,1], 4)
+```
+The first two eigenvalues are relatively larger compared to the rest, and they account for the majority of the total variance. 
+(table shown in ii)
+
+\
+ii.
+
+Criteria 1, eigenvalues and their cumulative proportions table
+```{r, echo = FALSE}
+round(R_eigen_table,4)
+```
+This method suggests to keep \textbf{3} principal component which gives 84.3% of the total variance.\
+
+Criteria 2, check which eigenvalue(s) is greater than the mean of eigenvalues
+
+Since three eigenvalues are larger than the mean of 1, this method suggests to keep \textbf{3} principal component. \
+
+Criteria3, scree plot
+
+```{r,echo = FALSE,fig.height=3, fig.width=4.2}
+plot(R_eigen_table[,1], type = "o", pch = 15, main = "Scree Plot",
+     xlab = "Principal Component Number", ylab = "Eigenvalues")
+```
+
+The "bend" occurs at PC2, indicating from PC2 and on, the the eigenvalues are relatively small. 
+This method suggests to keep \textbf{1} principal component. \
+
+Overall, \textbf{3} principal components are retained. \
+
+\
+iii.
+
+The eigenvectors for the principal components:
+```{r, echo = FALSE}
+e_R1 <- as.vector(R_pr$rotation[,1])
+e_R2 <- as.vector(R_pr$rotation[,2])
+e_R3 <- as.vector(R_pr$rotation[,3])
+```
+$(\tilde{\hat{e_1}})^T$ = 
+```{r, echo = FALSE}
+round(e_R1, 4)
+```
+
+$(\tilde{\hat{e_2}})^T$ = 
+```{r, echo = FALSE}
+round(e_R2, 4)
+```
+
+$(\tilde{\hat{e_3}})^T$ = 
+```{r, echo = FALSE}
+round(e_R3, 4)
+```
+
+\
+iv.
+
+PC1 depends on all the variables other than total wind(miles per day) and maximum daily relative humidity almost evenly.
+Coefficients on humidity have opposite signs compared to temperature, showing contrast relationship.
+
+The majority of PC2 depends on $x_5$, $x_8$, and $x_{10}$ have relatively large magnitudes than the rest,
+means PC2 primarily interprets the minimum daily soil temperature, minimum daily relative humidity, and 
+total wind(miles per day).
+
+The majority of PC3 depends on maximum daily relative humidity, followed by a significant amount of 
+total wind(miles per day) but with opposite sign, indicating there is contrast between those two.
+
+\
+v.
+
+Scatter plot for the principal components
+
+```{r, echo=FALSE, results='hide',fig.height=2.8, fig.width=8.4}
+par(mfrow=c(1, 3))
+plot(R_pr$x[,1], R_pr$x[,2], xlab = "PC1 (54.73%)", ylab = "PC2 (19.27%)", pch = 20)
+abline(v = 0, h = 0)
+
+plot(R_pr$x[,1], R_pr$x[,3], xlab = "PC1 (54.73%)", ylab = "PC3 (10.28%)", pch = 20)
+abline(v = 0, h = 0)
+
+plot(R_pr$x[,2], R_pr$x[,3], xlab = "PC2 (19.27%)", ylab = "PC3 (10.28%)", pch = 20)
+abline(v = 0, h = 0)
+```
+PC2 VS PC1 plot: Data points are more gathered toward to the right side of the plot, data points becomes 
+more scattered as they decrease in PC1 values.
+
+PC3 VS PC1 plot: Data points are nearly evenly distributed across the plot, with some sparse points on the left, 
+it's hard to get any relationships here.
+
+PC2 VS PC3: It appears there are two small groups on the plots, one is slight above the intersection of the 
+axes and one is slightly below the origin. 
+
+\textbf{(d)} \
+
+The boxplot of the data:
+
+```{r, echo = FALSE,fig.height=5, fig.width=8} 
+boxplot(X, ylab = 'measurement')
+```
+Correlation matrix \textbf{R} is better here. In the boxplot of the data above, the range for the values of $x_{10}$ are
+significantly larger than the rest of the variables, causing a scaling issue.  In the \textbf{S} PCA, all
+three criteria suggest to keep only one principal component, and that principal component only really 
+tells us about the total wind(miles per day). Therefore, we can not obtain information about the relationships 
+between the other variables from it. But in the \textbf{R} PCA, we are able to obtain those information.
+
+\textbf{(e)} \ 
+
+Interpretation of the principal components: 
+
+For \textbf{S}:
+
+PC1 is a component of total wind(miles per day), higher PC1 values means less wind(negative sign). \
+PC2 shows the contrast between integrated area under daily humidity on one hand, 
+and integrated area under daily air temperature/soil temperature, and evaporation on the other hand.
+
+For \textbf{R}:
+
+PC1 represents the contrast between humidity and temperature. \
+PC2 mainly represents the minimum temperature/humidity values and the total wind (negative signs), 
+higher PC2 values indicates lower minimum temperature/humidity, and less wind. Showing dependencies 
+between those variables.\
+PC3 shows the contrast between maximum daily relative humidity and total wind.  \
+
+\
+Code used to solve the questions(graphs are hidden):
+```{r fig.show='hide'}
+rm(list = ls())
+library(readxl)
+library(factoextra)
+X <- read_excel("C:/Users/John/Desktop/STAT 445/Data/temperaturedata-clean.xlsx")
+S <- cov(X)
+round(S,4)
+R <- cor(X)
+round(R,4)
+
+# S analysis
+S_pr = prcomp(X, center = TRUE, scale. = FALSE)
+S_eigen_table = get_eigenvalue(S_pr)
+round(S_eigen_table[,1], 4)
+round(S_eigen_table,4)
+mean(S_eigen_table[,1])
+plot(S_eigen_table[,1], type = "o", pch = 15, main = "Scree Plot",
+     xlab = "Principal Component Number", ylab = "Eigenvalues")
+e_S1 <- as.vector(S_pr$rotation[,1])
+e_S2 <- as.vector(S_pr$rotation[,2])
+round(e_S1, 4)
+round(e_S2, 4)
+plot(S_pr$x[,1], S_pr$x[,2], xlab = "PC1 (91.48%)", ylab = "PC2 (6.52%)", pch = 20)
+text(S_pr$x[,1], S_pr$x[,2], pos = 3, offset = 0.3, cex = 0.5)
+abline(v = 0, h = 0)
+
+# R analysis
+R_pr = prcomp(X, center = TRUE, scale. = TRUE)
+R_eigen_table = get_eigenvalue(R_pr)
+round(R_eigen_table[,1], 4)
+round(R_eigen_table,4)
+plot(R_eigen_table[,1], type = "o", pch = 15, main = "Scree Plot",
+     xlab = "Principal Component Number", ylab = "Eigenvalues")
+e_R1 <- as.vector(R_pr$rotation[,1])
+e_R2 <- as.vector(R_pr$rotation[,2])
+e_R3 <- as.vector(R_pr$rotation[,3])
+round(e_R1, 4)
+round(e_R2, 4)
+round(e_R3, 4)
+par(mfrow=c(1, 3))
+plot(R_pr$x[,1], R_pr$x[,2], xlab = "PC1 (54.73%)", ylab = "PC2 (19.27%)", pch = 20)
+abline(v = 0, h = 0)
+
+plot(R_pr$x[,1], R_pr$x[,3], xlab = "PC1 (54.73%)", ylab = "PC3 (10.28%)", pch = 20)
+abline(v = 0, h = 0)
+
+plot(R_pr$x[,2], R_pr$x[,3], xlab = "PC2 (19.27%)", ylab = "PC3 (10.28%)", pch = 20)
+abline(v = 0, h = 0)
+```
